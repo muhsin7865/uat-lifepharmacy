@@ -12,7 +12,8 @@ import BreadCrumb from "@/components/breadcrumb";
 import { useRouter } from "next/router";
 import { Icon } from "@/components/ui/icons";
 import { Typography } from "@/components/ui/typography";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Building, Calendar, HomeIcon } from "lucide-react";
 
 export default function ({
   DoctorsListData,
@@ -26,6 +27,7 @@ export default function ({
   const [animateSpin, setAnimateSpin] = useState(false);
   const { query } = useRouter();
   const router = useRouter();
+  console.log(doctorsData);
 
   const LoadMoreDoctorsData = () => {
     setAnimateSpin(true);
@@ -35,8 +37,10 @@ export default function ({
       10,
       SpecialityQuery ? query.toString() : null
     ).then((dList) => {
+      debugger;
       let doctorsListData = SpecialityQuery ? dList.data.doctors : dList.data;
-      setDoctorsData([...doctorsData, ...doctorsListData]);
+
+      setDoctorsData((prevData: any) => [...prevData, ...doctorsListData]);
       setAnimateSpin(false);
     });
     setnoOfDoctors((no) => no + 10);
@@ -64,7 +68,8 @@ export default function ({
 
   useEffect(() => {
     setDoctorsData(DoctorsListData.data.doctors);
-  });
+  }, [query]);
+
   return (
     <div className="max-w-[1440px] px-[10px] mx-auto">
       <BreadCrumb
@@ -83,16 +88,24 @@ export default function ({
             <hr />
             <Accordion.Root type="single" defaultValue="item-1" collapsible>
               <AccordionItem className="py-2" value="item-1">
-                <AccordionTrigger className=" text-lg">
+                <AccordionTrigger className=" text-lg py-3 flex justify-between">
                   Neatest Clinics
+                  <Icon
+                    type="chevronBottomIcon"
+                    className="mx-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 text-slate-400"
+                  />
                 </AccordionTrigger>
 
                 <AccordionContent className="py-2">
                   <div className="mb-2">
-                    <p className="text-xs">
+                    <Typography
+                      size={"xs"}
+                      className="!leading-5"
+                      bold={"light"}
+                    >
                       Visit any Life Walk in clinic to give your sample
                       conviniently located across UAE.
-                    </p>
+                    </Typography>
                     <button className="bg-life text-white text-xs px-3 py-0.5 rounded-full my-2">
                       SELECT LOCATION
                     </button>
@@ -103,8 +116,12 @@ export default function ({
             <hr />
             <Accordion.Root collapsible defaultValue="item-1" type="single">
               <AccordionItem className="py-2" value="item-1">
-                <AccordionTrigger className=" text-lg">
+                <AccordionTrigger className=" text-lg py-3 flex justify-between">
                   Now or Later
+                  <Icon
+                    type="chevronBottomIcon"
+                    className="mx-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 text-slate-400"
+                  />
                 </AccordionTrigger>
 
                 <AccordionContent className="py-2">
@@ -265,8 +282,12 @@ export default function ({
 
             <Accordion.Root type="single" defaultValue="item-1" collapsible>
               <AccordionItem className="py-2" value="item-1">
-                <AccordionTrigger className=" text-lg">
+                <AccordionTrigger className=" text-lg py-3 flex justify-between">
                   Specialities
+                  <Icon
+                    type="chevronBottomIcon"
+                    className="mx-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 text-slate-400"
+                  />
                 </AccordionTrigger>
                 <AccordionContent className="py-2">
                   <div className="mb-2 ">
@@ -410,27 +431,27 @@ export default function ({
         <div className="lg:col-span-9 col-span-full  my-3 space-y-3">
           {doctorsData.map((dList: any) => (
             <div className="w-full border border-muted shadow rounded-lg p-2 space-y-2 relative py-2">
-              <div className="absolute right-2 rtl:left-2 top-2 rounded-lg bg-[#ffe6e6] text-life text-sm font-bold text-center px-3 leading-tight">
+              <div className="absolute right-2 rtl:left-2 top-2 rounded-lg bg-[#ffe6e6] text-life text-sm font-bold text-center px-3 leading-tight py-0.5">
                 <Typography
-                  bold={"bold"}
+                  bold={"semibold"}
                   alignment={"horizontalCenter"}
-                  size={"sm"}
+                  size={"xs"}
                 >
                   XP
                 </Typography>
 
                 <Typography
-                  bold={"bold"}
                   alignment={"horizontalCenter"}
-                  size={"sm"}
+                  size={"xs"}
+                  bold={"semibold"}
                 >
                   {dList.experience.years}
                 </Typography>
 
                 <Typography
-                  bold={"bold"}
+                  bold={"light"}
                   alignment={"horizontalCenter"}
-                  size={"sm"}
+                  size={"xs"}
                 >
                   Years
                 </Typography>
@@ -457,7 +478,7 @@ export default function ({
                         <Icon
                           type="checkIcon"
                           sizes={"sm"}
-                          className="text-green-500"
+                          className="text-white fill-green-500"
                         />
                         <Typography variant={"primary"} size={"sm"}>
                           {dList.likes.percentage}
@@ -481,7 +502,11 @@ export default function ({
                 <Typography size={"xs"}>Speak :</Typography>
                 <div className="flex space-x-2 rtl:space-x-reverse">
                   {dList.languages.map((langData: any) => (
-                    <Button variant={"categoryBtn"} size={"xs"}>
+                    <Button
+                      variant={"normal"}
+                      size={"xs"}
+                      className="!text-xs border border-muted !text-[11px] px-2 py-[1px]"
+                    >
                       {langData.value}
                     </Button>
                   ))}
@@ -490,72 +515,69 @@ export default function ({
               <hr />
               <div>
                 {dList.available_clinics.data.map((avClinics: any) => (
-                  <div className="flex justify-between">
+                  <div className="flex justify-between mb-1">
                     <div>
                       <div className="flex space-x-2 rtl:space-x-reverse items-center">
-                        <Icon
-                          type="homeIconMenu"
-                          className="text-life w-4 h-4 inline mr-2"
-                        />
-                        <Typography size={"sm"} variant={"lifeText"}>
+                        <HomeIcon className="w-4 h-4" />
+                        <Typography
+                          size={"sm"}
+                          bold={"semibold"}
+                          variant={"lifeText"}
+                        >
                           {avClinics.name}
                         </Typography>
                       </div>
                     </div>
-                    <Typography size={"sm"}>
+                    <Typography
+                      size={"xs"}
+                      variant={"paragraph"}
+                      bold={"light"}
+                    >
                       ({avClinics.distance_text})
                     </Typography>
                   </div>
                 ))}
-                <div className="flex justify-between pt-1">
-                  <div>
-                    <Typography
-                      size={"sm"}
-                      className={buttonVariants({
-                        variant: "primaryLink",
-                        size: "sm",
-                      })}
-                    >
+                <div className="flex justify-between pt-1 items-center">
+                  <div className="space-y-1">
+                    <Typography size={"xs"} variant={"primary"}>
                       AVAILABILITY STATUS
                     </Typography>
                     <div className="flex space-x-2 rtl:space-x-reverse items-center">
-                      <Icon
-                        type="listicon"
-                        sizes={"sm"}
-                        className="text-life w-4 h-4 inline mr-2"
-                      />
-                      <Typography size={"sm"}>
+                      <Calendar className="h-3 w-3" />
+                      <Typography size={"xs"} bold={"light"}>
                         {dList.slot.date_time}
                       </Typography>
                     </div>
                   </div>
-                  <Button className="h-fit">BOOK NOW</Button>
+                  <Button
+                    rounded={"md"}
+                    size={"lg"}
+                    className="h-fit !text-xs !py-1.5 !px-7"
+                  >
+                    BOOK NOW
+                  </Button>
                 </div>
               </div>
             </div>
           ))}
           {noOfDoctors >= doctorsData.length ? (
-            <div className="py-4">
-              <button
+            <div className="py-4 w-full flex justify-center">
+              <Button
+                size={"lg"}
                 onClick={() => LoadMoreDoctorsData()}
-                className="border-slate-300 flex items-center border mx-auto px-3 py-2  rounded-full hover:bg-[#39f] hover:text-white transition-all duration-300"
-              >
-                <div className="mx-3 text-sm  items-center">Load More</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className={`w-4 h-4  ${animateSpin ? "animate-spin" : " "}`}
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                rounded={"full"}
+                variant={"outline"}
+                className="mx-auto"
+                iconLeft={
+                  <Icon
+                    sizes={"sm"}
+                    type="refreshIcon"
+                    className={`${animateSpin ? "animate-spin" : " "} mx-2`}
                   />
-                </svg>
-              </button>
+                }
+              >
+                Load More
+              </Button>
             </div>
           ) : null}
         </div>
@@ -570,7 +592,7 @@ export async function getServerSideProps({ query }: { query: any }) {
   return {
     props: {
       DoctorsListData,
-      SpecialityQuery: query.speciality ? query.speciality : null,
+      SpecialityQuery: query.speciality ? query.speciality : "",
     },
   };
 }
