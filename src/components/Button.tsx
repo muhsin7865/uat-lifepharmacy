@@ -426,10 +426,10 @@ export const UserPreferenceBtn = () => {
       <Tabs defaultValue="phone" className="border-none">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="phone" className="z-20" onClick={() => changeUserPreference(userPreferences[0])}>
-            <Icons type="gridIcon" sizes={"sm"} className="w-5 h-5" />
+            <Icons type="gridIcon" sizes={"sm"} className="w-4 h-4" />
           </TabsTrigger>
           <TabsTrigger value="email" onClick={() => changeUserPreference(userPreferences[1])}>
-            <Icons type="listicon" sizes={"sm"} className="w-5 h-5" />
+            <Icons type="listicon" sizes={"sm"} className="w-4 h-4" />
           </TabsTrigger>
         </TabsList>
       </Tabs>
