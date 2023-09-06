@@ -73,7 +73,7 @@ const FiltersSection = ({
         isOpen={sideBarState}
         setIsClosed={setSideBarState}
       >
-        <div className=" lg:px-0 p-3 ">
+        <div className=" lg:px-0 p-3 overflow-y-auto">
           {catData.data[1] ? (
             <>
               <Accordion.Root
@@ -408,9 +408,9 @@ const FiltersSection = ({
           </Accordion.Root>
         </div>
       </SideBarMenuTranstion>
-      <div className="rounded-full md:hidden px-3 py-2 flex items-center z-50 space-x-4 fixed bottom-20 shadow-lg w-fit mx-auto left-0 right-0 bg-white">
+      <div className="rounded-full md:hidden px-3 py-1.5 flex items-center z-50 space-x-4 fixed bottom-20 shadow-lg w-fit mx-auto left-0 right-0 bg-white">
         <button onClick={() => setSideBarState(true)}>
-          <FilterIcon className="h-5 w-5" />
+          <FilterIcon className="h-4 w-4" />
         </button>
         <button
           onClick={() => {
@@ -422,8 +422,8 @@ const FiltersSection = ({
           <Checkbox checked={instantCheckedState} />
           <Image
             src="https://www.lifepharmacy.com/images/instant.svg"
-            width={60}
-            height={60}
+            width={50}
+            height={50}
             alt="instant_image"
           />
         </button>

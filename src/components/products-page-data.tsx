@@ -218,7 +218,7 @@ const ProductsPageData = ({
         productsLength={productsLength}
       />
 
-      <div aria-labelledby="products-heading" className="pb-24">
+      <div className="pb-24">
         <div className="grid grid-cols-1 gap-x-8  lg:grid-cols-4">
           {!isSearchPage && !isBrandsPage ? (
             <FiltersSection
@@ -301,7 +301,7 @@ const ProductsPageData = ({
                   )
                 ) : (
                   <div className="w-full col-span-3">
-                    <Typography variant={"paragraph"} className="py-2">
+                    <Typography variant={"paragraph"} className="py-2" alignment={"horizontalCenter"}>
                       No Products Found
                     </Typography>
                   </div>
