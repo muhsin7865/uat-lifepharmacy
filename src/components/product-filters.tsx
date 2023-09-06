@@ -43,7 +43,7 @@ const ProductFilters = ({
         <div className="relative inline-block text-left group/sort-menu">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant={"normal"} className="py-2.5">
+              <Button variant={"normal"} className="py-2">
                 <span className="mx-2"> {selectedFilter.text}</span>
                 <Icon type="chevronBottomIcon" sizes={"sm"} />
               </Button>
