@@ -298,7 +298,7 @@ export const ProductPricesData = ({
   const { currentCountryDetails } = useLanguage();
 
   const offerPrice = productPrices && productPrices[0].price.offer_price;
-  const regularPrice = productPrices[0].price.regular_price;
+  const regularPrice = productPrices && productPrices[0].price.regular_price;
   return (
     <div className="flex justify-between">
       {productPrices ? (

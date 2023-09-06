@@ -42,7 +42,7 @@ export default function SmSearchBoxModal() {
               onChange={(e) => {
                 searchButtonOnMouseEnter(e.target.value);
               }}
-              inputClassName="bg-slate-100"
+              inputClassName="bg-slate-100 py-1"
               placeholder="Search for products..."
               variant={"smallSearch"}
               sizes={"sm"}
@@ -50,7 +50,7 @@ export default function SmSearchBoxModal() {
                 <Icon
                   type="searchIcon"
                   variant={"inputIconLeft"}
-                  sizes={"sm"}
+             
                 />
               }
               iconRight={
@@ -73,7 +73,7 @@ export default function SmSearchBoxModal() {
                 )
               }
               rounded={"full"}
-              className="border-none py-1.5"
+              className="border-none py-0.5"
             />
           </div>
 
