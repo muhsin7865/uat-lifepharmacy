@@ -472,7 +472,7 @@ const AuthModal = () => {
                     href="/cart"
                     onClick={() => setSheetOpen(false)}
                     className={
-                      "w-2/3 sm:1/3 sm:text-base text-sm " +
+                      "w-full sm:text-base text-sm " +
                       buttonVariants({ variant: "outline", size: "default" })
                     }
                   >
