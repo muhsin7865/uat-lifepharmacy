@@ -135,7 +135,7 @@ export default function OrderSucessSheet() {
         <div className="grid grid-cols-1 space-y-4">
           <div className="  space-y-3 md:px-[10px] px-0 py-3">
             {addedToCartItemData ? (
-              <div className="flex justify-between rtl:space-x-reverse space-x-4 items-center ">
+              <div className="flex  rtl:space-x-reverse space-x-5 items-center ">
                 <div>
                   <Image
                     src={addedToCartItemData[0].images.featured_image}
