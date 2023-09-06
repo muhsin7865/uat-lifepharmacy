@@ -40,7 +40,7 @@ Toast.Icon = function ToastIcon({ name, className, ...props }: any) {
 interface ToastTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
 
 Toast.Title = function ToastTitle({ className, ...props }: ToastTitleProps) {
-  return <Typography bold={"bold"} {...props} />;
+  return <Typography bold={"bold"} className="text-black" {...props} />;
 };
 
 interface ToastDescriptionProps
