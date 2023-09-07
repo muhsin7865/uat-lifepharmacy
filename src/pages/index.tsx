@@ -42,7 +42,7 @@ export default function Home({
       next={fetchMoreData}
       hasMore={hasMore}
       loader={null}
-      scrollThreshold={0.3}
+      scrollThreshold={0.2}
     >
       {content &&
         content.map((data: any, ind: number) => (
