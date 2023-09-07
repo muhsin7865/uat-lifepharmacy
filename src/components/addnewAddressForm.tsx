@@ -103,7 +103,7 @@ const AddNewAddressForm = ({
         <div className=" flex items-center space-x-3 rtl:space-x-reverse">
           {isModal && (
             <>
-              <Button rounded={"full"} variant={"closeBtn"} size={"sm"}>
+              {/* <Button rounded={"full"} variant={"closeBtn"} size={"sm"}>
                 <Icon
                   onClick={() => {
                     setAddNewAddressClick(true);
@@ -113,7 +113,7 @@ const AddNewAddressForm = ({
                   }}
                   type="chevronLeftIcon"
                 />
-              </Button>
+              </Button> */}
 
               <Typography size={"xl"} variant={"lifeText"} bold={"bold"}>
                 Your Address

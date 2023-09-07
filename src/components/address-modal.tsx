@@ -43,7 +43,6 @@ const AddressModal = () => {
   });
 
 
-  console.log(addNewAddressClick);
   
   
 
