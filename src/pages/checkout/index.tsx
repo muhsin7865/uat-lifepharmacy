@@ -25,6 +25,7 @@ export default function Checkout({}) {
     setModalFixedState,
     setaddNewAddress,
     AddressDataIndex,
+    addressData,
   } = useModal();
   useEffect(() => {
     setModalFixedState(true);
@@ -44,20 +45,20 @@ export default function Checkout({}) {
   return domLoaded ? (
     <div className="grid grid-cols-12 gap-x-3 px-[10px] py-5 max-w-[1440px] mx-auto">
       <div className="space-y-3 md:col-span-8 col-span-full">
-        <div className="shadow-md rounded-lg p-1 border-2 border-muted">
-          <div className="bg-blue-400 text-white flex justify-between rounded-full px-5 py-1">
+        <div className="shadow-md rounded-lg p-2 border-2 border-muted">
+          <div className="bg-blue-400 text-white flex justify-between rounded-full px-3 py-[3px] items-center">
             <div className="flex space-x-2 items-center rtl:space-x-reverse">
-              <Icon type="locationPinIcon" sizes={"sm"} />
-              <span className="text-sm">DELIVER TO</span>
+              <Icon type="locationPinIcon" sizes={"xs"} />
+              <Typography size={"xs"}>DELIVER TO</Typography>
             </div>
             <button
-              className="bg-blue-800 text-sm h-fit my-auto px-2  rounded-full"
+              className="bg-blue-800 text-sm  h-fit  px-2 py-[2px]  rounded-full flex items-center"
               onClick={() => setaddNewAddress(true)}
             >
-              <small>CHANGE</small>{" "}
+              <small className="text-[10px] leading-tight mt-[2px]">CHANGE</small>
             </button>
           </div>
-          {session ? (
+          {addressData && addressData.length > 0 ? (
             <div className="p-2">
               <table>
                 <tbody>
@@ -94,7 +95,12 @@ export default function Checkout({}) {
                 </tbody>
               </table>
             </div>
-          ) : null}
+          ) : 
+          
+          <div className="w-full p-5">
+            <Typography variant={"paragraph"} size={"xs"} alignment={"horizontalCenter"} className="italic">Please click on change and choose delivery address.</Typography>
+          </div>
+          }
         </div>
         <h5 className="text-life mb-2 font-semibold text-lg">
           Delivery Options
@@ -103,12 +109,12 @@ export default function Checkout({}) {
         <div className="shadow-md rounded-lg p-2 border-2 border-muted">
           <div className="bg-violet-200 text-white flex justify-between rounded-full px-5 py-1">
             <div className="flex space-x-2 items-center rtl:space-x-reverse">
-              <Icon type="infoIcon" sizes={"sm"} />
-              <Typography variant={"lifeText"} size={"sm"}>
+              <Icon type="infoIcon" sizes={"xs"} />
+              <Typography variant={"lifeText"} size={"xs"}>
                 Delivery From: {shipmentData.store_code}
               </Typography>
             </div>
-            <small className="text-life">Shipment 1</small>
+            <Typography variant={"lifeText"} size={"xs"}>Shipment 1</Typography>
           </div>
 
           <div className="py-5">
@@ -145,14 +151,13 @@ export default function Checkout({}) {
                 }`}
               >
                 <div className="flex space-x-4 rtl:space-x-reverse items-center">
-                  <RadioContainer className={""}>
-                  <RadioItem
-                  value=""
-                    defaultChecked={indx === 0}
-                    id={`delivery_slot-${indx}`}
-                  />
+                  <RadioContainer  className={""}>
+                    <RadioItem
+                      value=""
+                      defaultChecked={indx === 0}
+                      id={`delivery_slot-${indx}`}
+                    />
                   </RadioContainer>
-             
 
                   <Image
                     src="https://www.lifepharmacy.com/images/standard-icon.svg"
