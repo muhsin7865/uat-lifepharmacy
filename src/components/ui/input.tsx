@@ -5,7 +5,7 @@ import { typographyVariants } from "./typography";
 import { IconProps } from "./icons";
 
 export const inputVariants = cva(
-  "transition-all duration-500 h-fit px-2 focus:border-blue-400  border w-full border-gray-300 bg-white flex",
+  "transition-all  duration-500 h-fit px-2 focus-within:border-blue-400  border w-full border-gray-200 bg-white flex",
   {
     variants: {
       variant: {
@@ -23,6 +23,7 @@ export const inputVariants = cva(
       rounded: {
         lg: "rounded-lg",
         full: "rounded-full",
+        sm: "rounded",
       },
     },
     defaultVariants: {
@@ -80,7 +81,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         >
           {iconLeft && iconLeft}
 
-          <input className={cn("w-full", inputClassName)} {...props} />
+          <input className={cn("w-full placeholder:text-slate-400 placeholder:font-[200] placeholder:text-xs", inputClassName)} {...props} />
           {iconRight && iconRight}
         </div>
         {buttonRight && buttonRight}

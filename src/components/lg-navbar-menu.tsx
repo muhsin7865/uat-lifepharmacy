@@ -8,6 +8,7 @@ import { Icon } from "./ui/icons";
 import { Typography } from "./ui/typography";
 
 import { buttonVariants } from "./ui/button";
+import { useEffect } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -28,23 +29,34 @@ const LgNavbarCategoriesSection = ({
   const navigationTriggerState = (state: boolean) => {
     setOverlay(state);
     setGroupHover(state);
-
   };
+
+  const getDirection = (countryCode: any) => {
+    if (countryCode === "ar") {
+      return "rtl";
+    }
+    return "ltr";
+  };
+  const { selectedLanguageDetails } = useLanguage();
   const [groupHoverState, setGroupHover] = useState(false);
+  const [direction, setDirection] = useState("ltr");
+
+  useEffect(() => {
+    setDirection(getDirection(selectedLanguageDetails.path));
+  }, [selectedLanguageDetails.path]);
 
   return (
     <div className="bg-white md:block hidden   border-b">
-      <NavigationMenu.Root className="max-w-[1450px] mx-auto relative flex justify-between"   >
+      <NavigationMenu.Root className="max-w-[1450px] mx-auto relative flex justify-between">
         <NavigationMenu.List
-       
           className="center m-0 list-none grid grid-cols-12 items-center "
+          dir={direction}
         >
           <NavigationMenu.Item
-          onMouseOver={()=>
-          navigationTriggerState(true)}
-          onMouseLeave={() => {
-            navigationTriggerState(false);
-          }}
+            onMouseOver={() => navigationTriggerState(true)}
+            onMouseLeave={() => {
+              navigationTriggerState(false);
+            }}
             className="inline-block xl:col-span-2 col-span-3 min-w-fit"
           >
             <NavigationMenu.Trigger
@@ -84,12 +96,10 @@ const LgNavbarCategoriesSection = ({
               }}
               className="data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0  right-0"
             >
-           
-                <ShopByCatContent
-                  data={data}
-                  navigationTriggerState={navigationTriggerState}
-                />
-             
+              <ShopByCatContent
+                data={data}
+                navigationTriggerState={navigationTriggerState}
+              />
             </NavigationMenu.Content>
           </NavigationMenu.Item>
           <NavigationMenu.Item className="w-full xl:col-span-1 col-span-2 ml-3">

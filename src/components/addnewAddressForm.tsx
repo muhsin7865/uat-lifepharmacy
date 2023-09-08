@@ -17,6 +17,7 @@ import {
 } from "./ui/dropdownMenu";
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { cn } from "@/lib/utils";
 
 const AddNewAddressForm = ({
   isModal,
@@ -25,6 +26,7 @@ const AddNewAddressForm = ({
   handleSubmit,
   register,
   errors,
+  currentLocation
 }: {
   isModal: boolean;
   setCloseModal?: any;
@@ -32,6 +34,7 @@ const AddNewAddressForm = ({
   handleSubmit: any;
   register: any;
   errors: any;
+  currentLocation:any
 }) => {
   const { data: session, update } = useSession();
   const { countries, currentCountryDetails } = useLanguage();
@@ -54,19 +57,30 @@ const AddNewAddressForm = ({
     currentCountryDetails.country
   );
 
-
   const addressFormOnSubmit = (data: any): void => {
+    debugger;
+  //  console.log({
+  //     ...data,
+  //     ...{
+  //       phone: "+" + selectedCountryData.callingCodes + getValues("phone"),
+  //       type:deliverToTypes, 
+  //       latitude:currentLocation[0], 
+  //       longitude:currentLocation[1],
+  //     },
+  //   });
+    
     saveAddresstoDb({
-      ...formDataInitState,
       ...data,
       ...{
         phone: "+" + selectedCountryData.callingCodes + getValues("phone"),
+        type:deliverToTypes, 
+        latitude:currentLocation[0], 
+        longitude:currentLocation[1],
       },
     });
   };
 
   function saveAddresstoDb(formDatas: any) {
-
     var requestOptions = {
       method: "POST",
       headers: {
@@ -80,15 +94,16 @@ const AddNewAddressForm = ({
       requestOptions
     )
       .then((response) => {
+        debugger
         if (response.ok) {
           setAddressDataIndex(0);
           setaddNewAddress(false);
           setaddnewAddressFormVisibility(false);
           setFormData(formDataInitState);
-          setTimeout(()=>{
-            debugger
+          setTimeout(() => {
+            debugger;
             update();
-          }, 2000)
+          }, 2000);
         } else {
           throw new Error("Request failed");
         }
@@ -115,7 +130,7 @@ const AddNewAddressForm = ({
                 />
               </Button> */}
 
-              <Typography size={"xl"} variant={"lifeText"} bold={"bold"}>
+              <Typography size={"lg"} variant={"lifeText"} bold={"bold"}>
                 Your Address
               </Typography>
             </>
@@ -127,8 +142,8 @@ const AddNewAddressForm = ({
             size={"sm"}
             rounded={"full"}
             onClick={() => {
-              debugger
-              setCloseModal(false)}}
+              setCloseModal(false);
+            }}
           >
             <Icon type="crossIcon" />
           </Button>
@@ -137,20 +152,16 @@ const AddNewAddressForm = ({
 
       <div className="  bg-white">
         <form
-          className="space-y-3 pt-3"
+          className="space-y-1.5 pt-3"
           onSubmit={handleSubmit(addressFormOnSubmit)}
         >
           <div className="space-y-2">
-            <Button
-              variant={"default"}
-              size={"sm"}
-              rounded={"txl"}
-              className="!text-xs"
-            >
+            <div className="bg-life text-white text-xs w-fit rounded-md p-0.5 px-2">
               PERSONAL DETAILS
-            </Button>
+            </div>
             <Input
               sizes={"sm"}
+              rounded={"sm"}
               {...register("name", {
                 required: true,
               })}
@@ -167,71 +178,64 @@ const AddNewAddressForm = ({
               </Typography>
             )}
           </div>
-          <div className="space-y-2">
-            <Typography>
-              Enter your mobile number <span className="text-red-500">*</span>
-            </Typography>
+          <Typography size={"sm"} className="mb-1">
+            Enter your mobile number <span className="text-red-500">*</span>
+          </Typography>
 
-            <Input
-              sizes={"xs"}
-              {...register("phone", {
-                required: true,
-                validate: (value: any) =>
-                  isValidPhoneNumber(
-                    "+" + selectedCountryData.callingCodes + value
-                  ),
-              })}
-              className={`font-semibold !text-lg ${
-                errors.phone?.type === "validate" ? "border-red-500" : ""
-              }`}
-              buttonLeft={
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCountriesDrawerState(true);
-                  }}
-                  variant={"normal"}
-                  className="text-black"
-                  position={"inputLeftBtn"}
-                >
-                  {selectedCountryData ? (
-                    <>
+          <Input
+            sizes={"xs"}
+            rounded={"sm"}
+            {...register("phone", {
+              required: true,
+              validate: (value: any) =>
+                isValidPhoneNumber(
+                  "+" + selectedCountryData.callingCodes + value
+                ),
+            })}
+            className={`font-semibold !text-lg ${
+              errors.phone?.type === "validate" ? "border-red-500" : ""
+            }`}
+            buttonLeft={
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCountriesDrawerState(true);
+                }}
+                variant={"normal"}
+                className="text-black"
+                position={"inputLeftBtn"}
+              >
+                {selectedCountryData ? (
+                  <>
+                    {" "}
+                    <Image
+                      src={`https://hatscripts.github.io/circle-flags/flags/${selectedCountryData.alpha2Code.toLowerCase()}.svg`}
+                      width="50"
+                      height="50"
+                      className={`sm:w-6 sm:h-6 h-6 w-6`}
+                      alt={countriesData[0].name}
+                    />
+                    <Typography className="px-2" bold={"bold"}>
                       {" "}
-                      <Image
-                        src={`https://hatscripts.github.io/circle-flags/flags/${selectedCountryData.alpha2Code.toLowerCase()}.svg`}
-                        width="50"
-                        height="50"
-                        className={`sm:w-6 sm:h-6 h-6 w-6`}
-                        alt={countriesData[0].name}
-                      />
-                      <Typography className="px-2" bold={"bold"} size={"lg"}>
-                        {" "}
-                        +{selectedCountryData.callingCodes}
-                      </Typography>
-                    </>
-                  ) : null}
-                </Button>
-              }
-            />
-            {errors.phone?.type === "required" && (
-              <Typography variant={"danger"} size={"xs"}>
-                Phone Number is Required
-              </Typography>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Button
-              variant={"default"}
-              size={"sm"}
-              rounded={"full"}
-              className="!text-xs"
-            >
+                      +{selectedCountryData.callingCodes}
+                    </Typography>
+                  </>
+                ) : null}
+              </Button>
+            }
+          />
+          {errors.phone?.type === "required" && (
+            <Typography variant={"danger"} size={"xs"}>
+              Phone Number is Required
+            </Typography>
+          )}
+          <div className="space-y-2 pt-2">
+            <div className="bg-life text-white text-xs w-fit rounded-md p-0.5 px-2">
               ADDRESS DETAILS
-            </Button>
-
+            </div>
             <Input
+              rounded={"sm"}
               sizes={"sm"}
-              {...register("type", { value: deliverToTypes })}
               buttonLeft={
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="rounded-r-none">
@@ -255,6 +259,7 @@ const AddNewAddressForm = ({
           </div>
           <div className="flex space-x-6 rtl:space-x-reverse">
             <Input
+              rounded={"sm"}
               {...register("state", { required: true })}
               sizes={"sm"}
               className={`${
@@ -265,6 +270,7 @@ const AddNewAddressForm = ({
             />
 
             <Input
+              rounded={"sm"}
               sizes={"sm"}
               {...register("city", { required: true })}
               placeholder="City *"
@@ -273,6 +279,7 @@ const AddNewAddressForm = ({
           </div>
 
           <Input
+            rounded={"sm"}
             {...register("street_address", { required: true })}
             sizes={"sm"}
             className={`${
@@ -284,6 +291,7 @@ const AddNewAddressForm = ({
 
           <div className="flex space-x-6 rtl:space-x-reverse">
             <Input
+              rounded={"sm"}
               {...register("flat_number", { required: true })}
               sizes={"sm"}
               className={`${
@@ -293,6 +301,7 @@ const AddNewAddressForm = ({
               required
             />
             <Input
+              rounded={"sm"}
               {...register("building", { required: true })}
               sizes={"sm"}
               className={`${
@@ -305,6 +314,7 @@ const AddNewAddressForm = ({
 
           <div className="flex ">
             <Input
+              rounded={"sm"}
               {...register("country", { value: selectedCountry })}
               sizes={"sm"}
               buttonLeft={
@@ -335,10 +345,13 @@ const AddNewAddressForm = ({
             {...register("additional_info", { required: false })}
             rows={2}
             placeholder="Additional information (eg. Area, Landmark)"
-            className={inputVariants({ variant: "default" })}
+            className={cn(
+              inputVariants({ variant: "default", rounded: "sm" }),
+              "placeholder:text-slate-400 placeholder:font-[200] placeholder:text-xs"
+            )}
           ></textarea>
 
-          <Button type="submit" size={"sm"} className="w-full">
+          <Button type="submit" className="w-full">
             SAVE ADDRESS
           </Button>
         </form>

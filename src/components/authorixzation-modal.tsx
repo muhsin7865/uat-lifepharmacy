@@ -100,7 +100,6 @@ const AuthModal = () => {
         isPhone: "false",
         redirect: false,
       }).then(async (res) => {
-
         if (res?.ok) {
           setaddNewAddress(true);
           setaddnewAddressFormVisibility(false);
@@ -152,12 +151,9 @@ const AuthModal = () => {
       body: raw,
     };
     setPhoneNumberforOtp(credential);
-    fetch(
-      "/api/authorization",
-      requestOptions
-    )
+    fetch("/api/authorization", requestOptions)
       .then((response) => {
-        debugger
+        debugger;
         if (!response.ok) {
           debugger;
           toast({

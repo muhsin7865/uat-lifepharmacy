@@ -26,7 +26,7 @@ const buttonVariants = cva(
         ),
         productsListBtn:
           "bg-white w-full hover:bg-slate-200 text-black justify-start text-left",
-        closeBtn: "border border-muted bg-white hover:bg-slate-200 ltr:ml-auto rtl:mr-auto rounded-full h-[37px] w-[37px]",
+        closeBtn: "bg-white hover:bg-slate-200 ltr:ml-auto rtl:mr-auto rounded-full h-[37px] w-[37px]",
         primaryLink:
           "text-primary disabled:bg-blue-400 disabled:cursor-not-allowed  hover:text-blue-500 !p-0",
         sideBarMenuButton:

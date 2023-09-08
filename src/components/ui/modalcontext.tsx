@@ -74,7 +74,6 @@ type ModalContextState = {
   addnewAddressFormVisibility: boolean;
 };
 
-
 const ModalContext = createContext<ModalContextState | undefined>(undefined);
 
 export const useModal = () => {
@@ -113,20 +112,16 @@ export const ModalProvider = ({ children }: { children: any }) => {
   const [frequentlyBroughtData, setFrequentlyBroughtData] = useState<any>(null);
   const [loading, setLoadingState] = useState<string>("");
   const [countriesDrawerState, setCountriesDrawerState] = useState(false);
-  const [selectedCountryData, setSelectedCountryData] = useState<any>(
-    {
-      name: "United Arab Emirates",
-      alpha2Code: "AE",
-      callingCodes: [
-          "971"
-      ],
-      independent: false
-  },
-  );
+  const [selectedCountryData, setSelectedCountryData] = useState<any>({
+    name: "United Arab Emirates",
+    alpha2Code: "AE",
+    callingCodes: ["971"],
+    independent: false,
+  });
   const [addressData, setAddressData] = useState<any>(null);
   const [lgSearchBoxSuggestionState, setLgSearchBoxSuggestionState] =
     useState(false);
-  const [addNewAddressClick, setAddNewAddressClick] = useState(true);
+  const [addNewAddressClick, setAddNewAddressClick] = useState(false);
 
   const [searchData, setData] = useState({
     results: [
@@ -216,7 +211,6 @@ export const ModalProvider = ({ children }: { children: any }) => {
   }
 
   const formDataInitState = {
-    id: addressId,
     entity_id: 1462724,
     longitude: "55.272887000000000",
     latitude: "25.219370000000000",
@@ -228,11 +222,12 @@ export const ModalProvider = ({ children }: { children: any }) => {
     belongs_to: "user",
     deleted_at: null,
     is_validated: 1,
+
+
+    
   };
 
   const [formData, setFormData] = useState({
-    id: addressId,
-    entity_id: 1462724,
     name: "",
     phone: "",
     longitude: "55.272887000000000",
@@ -256,16 +251,14 @@ export const ModalProvider = ({ children }: { children: any }) => {
   });
 
   useEffect(() => {
-    session?.token ?
-      getSessionDataAddress(session?.token.token).then((res) => {
-    // debugger
+    session?.token
+      ? getSessionDataAddress(session?.token.token).then((res) => {
+          // debugger
 
-        setAddressData(res.data.addresses);
-        setAddressDataIndex(res.data.addresses[0]);
-      })
-      :
-      setAddressDataIndex(null);
-
+          setAddressData(res.data.addresses);
+          setAddressDataIndex(res.data.addresses[0]);
+        })
+      : setAddressDataIndex(null);
   }, [session?.token, !addnewAddressFormVisibility]);
 
   const formDatahandleChange = (e: any): void => {
@@ -280,15 +273,17 @@ export const ModalProvider = ({ children }: { children: any }) => {
   const locationOnClickHandle = () => {
     debugger;
     if (session != null) {
-      setaddNewAddress(true);
+      if (addressData) {
+        setaddNewAddress(true);
 
-      if (addressData.length > 0) {
-        setavailableAddresses(true);
-      } else if (addressData === 0) {
-        setAddNewAddressClick(true);
+        if (addressData.length > 0) {
+          setavailableAddresses(true);
+        } else if(addressData.length === 0) {
+          setAddNewAddressClick(true);
+        }
+      } else {
+        setLocationModalState(true);
       }
-    } else {
-      setLocationModalState(true);
     }
   };
   // console.log(addressData);
@@ -350,7 +345,6 @@ export const ModalProvider = ({ children }: { children: any }) => {
     setAddNewAddressClick,
     locationOnClickHandle,
     addnewAddressFormVisibility,
-    
   };
 
   return (

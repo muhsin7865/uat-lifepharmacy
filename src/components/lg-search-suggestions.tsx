@@ -5,7 +5,6 @@ import { ProductsSkeleton, SugesstionsSkeleton } from "./skeletons";
 import { Icon } from "./ui/icons";
 import { useModal } from "./ui/modalcontext";
 import { AddOrEditCartBtn, ProductPricesData } from "./Button";
-import { useState } from "react";
 
 export default function LgSearchSuggestions({
   searchData,

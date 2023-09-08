@@ -71,12 +71,14 @@ export default function LgSearch({
               />
             ) : (
               lgSearchBoxSuggestionState && (
-                <Button onClick={() => searchBoxClear()} className={""} size={"xs"} rounded={"full"} variant={"clearBtn"}>
-                  <Icon
-                    sizes={"xs"}
-                    type="crossIcon"
-                    className="mx-auto"
-                  />
+                <Button
+                  onClick={() => searchBoxClear()}
+                  className={""}
+                  size={"xs"}
+                  rounded={"full"}
+                  variant={"clearBtn"}
+                >
+                  <Icon sizes={"xs"} type="crossIcon" className="mx-auto" />
                 </Button>
               )
             )
@@ -111,13 +113,8 @@ export default function LgSearch({
             <div className="absolute z-30 right-0  left-0 bg-white rounded-lg rounded-t-none border-t w-full ">
               <LgSearchSuggestions searchData={searchData} close={() => null} />
             </div>
-            {/* <div
-              className="inset-0 z-[20] fixed  "
-              onClick={() => setLgSearchBoxSuggestionState(false)}
-            ></div> */}
           </div>
         )}
-        {/* </LgSearchMenuTransition> */}
       </div>
     </div>
   );
