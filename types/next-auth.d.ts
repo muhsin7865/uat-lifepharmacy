@@ -13,7 +13,7 @@ declare module "next-auth" {
         };
         expires: ISODateString,
         token:JWT
-
+        selected_address:any
     }
 }
 
