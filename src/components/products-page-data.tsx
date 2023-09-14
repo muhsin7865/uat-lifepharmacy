@@ -1,170 +1,93 @@
 import { SingleProductData } from "./single-product-data";
 import React, { useState } from "react";
-
 import { useRouter } from "next/router";
 import getProductsDataByCat from "@/lib/getProductsDataByCat";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ProductsSkeleton } from "./productsSkeleton";
-
 import getBrandProductData from "@/lib/getBrandProductData";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { useEffect } from "react";
 import { Typography } from "./ui/typography";
-import { FiltersSection } from "./category-filters";
 import { ProductFilters } from "./product-filters";
 import { useModal } from "./ui/modalcontext";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Icon } from "./ui/icons";
+import { stringify } from "querystring";
+import dynamic from "next/dynamic";
+
+const FiltersSection = dynamic(
+  () => import("./category-filters").then((mod) => mod.FiltersSection),
+  {
+    ssr: false,
+  }
+);
+
 const ProductsPageData = ({
-  filterPath,
   categoryData,
   brandsData,
   isSearchPage,
-  selectedBrands,
-  menuData,
   isBrandsPage,
 }: {
   isSearchPage: boolean;
-  selectedBrands: any;
   categoryData: any;
   brandsData: any;
-  filterPath: any;
-  menuData: any;
   isBrandsPage: boolean;
 }) => {
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
 
   const [noOfProducts, setNoOfProducts] = useState(40);
-  const [animateSpin, setAnimateSpin] = useState(false);
-  const [showMoreProductsbtn, setShowMoreProductsbtn] = useState(true);
-  const [filtersSelected, setFilters] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   const [productFilterApplied, setProductsFilterApplied] = useState(false);
-  const [brandFiltersAppliedStatus, setBrandFiltersAppliedStatus] =
-    useState(false);
-
-  const generateFilterPath = (type: string, value: string | number) => {
-    return `&${type}=${value}`;
-  };
+  const [isClientSideData, setIsClientSideData] = useState(false);
+  const noOfProductsCurrently = categoryData.products.length + data.length;
+  const [showMoreProductsbtn, setShowMoreProductsbtn] = useState(
+    noOfProductsCurrently < categoryData.total_count
+  );
 
   const { locale } = useLanguage();
 
-  function typeGenerate(type: string) {
-    switch (type) {
-      case "Category":
-        return "categories";
-      case "Collection":
-        return "collections";
-    }
-    return "";
-  }
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsClientSideData(true);
 
-  const updateFilterData = (
-    prevFilters: any,
-    type: string,
-    value: string | number
-  ) => {
-    debugger;
-    setFilters([
-      {
-        ...prevFilters,
-        filterPath: generateFilterPath(type, value),
-        value: value,
-      },
-    ]);
+      setProductsFilterApplied(true);
+      fetchData(0, false, stringify(router.query));
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router]);
 
-    fetchData(
-      typeGenerate(menuData[0]),
-      0,
-      false,
-      [
-        {
-          ...prevFilters,
-          filterPath: generateFilterPath(type, value),
-          value: value,
-        },
-      ]
-        .map((filters: any) => filters.filterPath)
-        .join("")
-    );
-  };
-
-  const createFilterData = (type: string, value: string | number) => {
-    debugger;
-
-    setFilters((prevFilters: any) => [
-      ...prevFilters,
-      {
-        type: type,
-        filterPath: generateFilterPath(type, value),
-        value: value,
-      },
-    ]);
-
-    fetchData(
-      typeGenerate(menuData[0]),
-      0,
-      false,
-      [
-        ...filtersSelected,
-        {
-          type: type,
-          filterPath: generateFilterPath(type, value),
-          value: value,
-        },
-      ]
-        .map((filters: any) => filters.filterPath)
-        .join("")
-    );
-  };
-
-  const filterSet = (type: string, value: string | number) => {
-    debugger;
-    setProductsFilterApplied(true);
-
-    filtersSelected.length !== 0
-      ? filtersSelected.some((filter: any) =>
-          filter.type === type
-            ? updateFilterData(filter, type, value)
-            : createFilterData(type, value)
-        )
-      : createFilterData(type, value);
-  };
+  const { selectedUserPrefernece } =
+    useModal();
 
   function fetchData(
-    queryData: any,
     noOfProducts: number,
     loadMoreData: boolean,
     filterPaths: string
   ) {
     if (!isBrandsPage) {
       debugger;
-      getProductsDataByCat(
-        filterPath + filterPaths,
-        noOfProducts,
-        queryData === null ? true : false,
-        locale
-      ).then((proData: any) => {
-        if (loadMoreData) {
-          setData((prevContent: any) => [
-            ...prevContent,
-            ...proData.data.products,
-          ]);
-          setAnimateSpin(false);
-          if (proData.data.products.length != 40) {
-            setShowMoreProductsbtn(false);
+      getProductsDataByCat(filterPaths, noOfProducts, locale).then(
+        (proData: any) => {
+          if (loadMoreData) {
+            setData((prevContent: any) => [
+              ...prevContent,
+              ...proData.data.products,
+            ]);
+          } else {
+            setData(proData.data.products);
+            setProductsFilterApplied(false);
           }
-        } else {
-          setData(proData.data.products);
-          setBrandFiltersAppliedStatus(true);
-          setProductsFilterApplied(false);
         }
-      });
+      );
     } else {
       getBrandProductData(
         query.brand,
         query.singleCategory ? query.singleCategory : "",
-        filterPath,
+        filterPaths,
         noOfProducts,
         locale
       ).then((brandsProductsData: any) => {
@@ -173,47 +96,36 @@ const ProductsPageData = ({
             ...prevContent,
             ...brandsProductsData.data.products,
           ]);
-          setAnimateSpin(false);
-          if (brandsProductsData.data.products != 40) {
-            setShowMoreProductsbtn(false);
-          }
         } else {
           setData(brandsProductsData.data.products);
           setProductsFilterApplied(false);
         }
       });
     }
+    if (loadMoreData) {
+      if (productsLength === noOfProductsCurrently) {
+        setShowMoreProductsbtn(false);
+      } else {
+        setShowMoreProductsbtn(true);
+      }
+    }
   }
 
   function loadMoreProducts() {
-    debugger;
-    setAnimateSpin(true);
-    fetchData(
-      typeGenerate(menuData[0]),
-      noOfProducts,
-      true,
-      [...filtersSelected].map((filters: any) => filters.filterPath).join("")
-    );
-    console.log(filtersSelected);
-
+    fetchData(noOfProducts, true, stringify(router.query));
     setNoOfProducts((c) => c + 40);
   }
 
   const productsLength =
     data.length === 0
-      ? categoryData.products.total_count
-        ? categoryData.products.total_count
+      ? categoryData.total_count
+        ? categoryData.total_count
         : noOfProducts
-      : data.length;
-
-  const noOfProductsCurrently = categoryData.products.length;
-
-  const { selectedUserPrefernece } = useModal();
+      : categoryData.total_count;
 
   return (
     <div className=" max-w-[1450px] mx-auto  sm:px-[10px] px-[5px]">
       <ProductFilters
-        filterSet={filterSet}
         noOfProductsCurrently={noOfProductsCurrently}
         productsLength={productsLength}
       />
@@ -221,12 +133,9 @@ const ProductsPageData = ({
       <div className="pb-24">
         <div className="grid grid-cols-1 gap-x-8  lg:grid-cols-4">
           {!isSearchPage && !isBrandsPage ? (
-            <FiltersSection
-              brandsData={brandsData}
-              filterSet={filterSet}
-              filterPath={filterPath}
-              selectedBrands={filtersSelected}
-            />
+            <div>
+              <FiltersSection brandsData={brandsData} />
+            </div>
           ) : !isSearchPage ? (
             <div className="hidden lg:block space-y-2">
               <Typography bold={"bold"}>Category</Typography>
@@ -282,12 +191,12 @@ const ProductsPageData = ({
                     : "  md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1"
                 }  xs:grid-cols-2 grid-cols-1 sm:gap-3 gap-1`}
               >
-                {categoryData.products.length > 0 ? (
-                  categoryData.products.map((pro_data: any) =>
-                    productFilterApplied ? (
-                      <ProductsSkeleton />
-                    ) : (
-                      !brandFiltersAppliedStatus && (
+                {!isClientSideData ? (
+                  categoryData.products.length > 0 ? (
+                    categoryData.products.map((pro_data: any) =>
+                      productFilterApplied ? (
+                        <ProductsSkeleton />
+                      ) : (
                         <SingleProductData
                           pro_data={pro_data}
                           isRowView={
@@ -298,14 +207,19 @@ const ProductsPageData = ({
                         />
                       )
                     )
+                  ) : (
+                    <div className="w-full col-span-3">
+                      <Typography
+                        variant={"paragraph"}
+                        className="py-2"
+                        alignment={"horizontalCenter"}
+                      >
+                        No Products Found
+                      </Typography>
+                    </div>
                   )
-                ) : (
-                  <div className="w-full col-span-3">
-                    <Typography variant={"paragraph"} className="py-2" alignment={"horizontalCenter"}>
-                      No Products Found
-                    </Typography>
-                  </div>
-                )}
+                ) : null}
+
                 {data.length > 0
                   ? data.map((pro_data: any) =>
                       productFilterApplied ? (
@@ -321,10 +235,11 @@ const ProductsPageData = ({
                         />
                       )
                     )
-                  : brandFiltersAppliedStatus && (
+                  : isClientSideData && (
                       <div className="w-full col-span-3">
                         <Typography
                           variant={"paragraph"}
+                          className="py-2"
                           alignment={"horizontalCenter"}
                         >
                           No Products Found
@@ -333,22 +248,6 @@ const ProductsPageData = ({
                     )}
               </div>
             </InfiniteScroll>
-            {/* {categoryData.products.length === 40 && showMoreProductsbtn ? (
-              <div className="w-full flex justify-center mt-10">
-                <Button
-                  isLoading={animateSpin}
-                  size={"sm"}
-                  iconLeft={true}
-                  iconType="refreshIcon"
-                  onClick={() => {
-                    loadMoreProducts();
-                  }}
-                  className="border-slate-300 flex items-center border  px-3 py-2  rounded-full hover:bg-[#39f] hover:text-white transition-all duration-300"
-                >
-                  More Products
-                </Button>
-              </div>
-            ) : null} */}
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ const ShopByCatContent = ({
   data: any;
   navigationTriggerState: (state: boolean) => void;
 }) => {
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
 
   const { width } = useWindowDimensions();
   const noOfBrands = () => {
@@ -40,19 +40,17 @@ const ShopByCatContent = ({
     const topBrandsDataExists = topBrandsData.some(
       (brandsData: any) => brandsData.type === path
     );
-
     if (!topBrandsDataExists) {
       setTopBrandsLoadingState(true);
 
       clearTimeout(topBrandsTimer);
 
       const fetchDataTimer = setTimeout(() => {
-        getProductsDataByCat(filterPath, 0, false, locale).then((data) => {
+        getProductsDataByCat(filterPath, 0, locale).then((data) => {
           setTopBrandsData([
             ...topBrandsData,
             { brands: [...data.data.brands], type: path },
           ]);
-          // console.log(topBrandsData);
 
           setTopBrandsLoadingState(false);
 

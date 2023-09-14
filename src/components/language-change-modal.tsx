@@ -28,33 +28,34 @@ const LanguageChangeModal: FC<compProps> = ({ setModalState, modalState }) => {
     setModalState(false);
   }
   const getDirection = (langCode: any) => {
-    debugger;
     if (langCode === "ar") {
       return "rtl";
     }
     return "ltr";
   };
+
   function languageOnClicked(path: any) {
-    debugger;
     closeModal();
     router.push("", router.asPath, {
       locale: `${selectedCountryPath}-${path}`,
     });
+
     //@ts-ignore
     document.querySelector("html").setAttribute("dir", getDirection(path));
 
     toast({
       title: "Sucess",
-      message: "Updated Cart Details",
+      message: "Language Changed Successfully",
       type: "success",
     });
   }
 
   const countryProps = (
-    <div className="space-y-2">
+    <div >
       {countries.map((contr: any) => (
         <Button
           variant={"productsListBtn"}
+          size={"lg"}
           onClick={() => {
             countryClicked(contr.path);
           }}
@@ -64,18 +65,19 @@ const LanguageChangeModal: FC<compProps> = ({ setModalState, modalState }) => {
               className=" ltr:ml-auto rtl:mr-auto rotate-0 rtl:-rotate-180"
             />
           }
+          className="border border-muted odd:rounded-b-none even:rounded-t-none even:border-t-0 py-3"
         >
           <div className="flex items-center justify-start space-x-4 rtl:space-x-reverse ">
-            <div className="md:h-10 md:w-10 w-7 h-7 rounded-full my-auto">
+            <div className="md:h-8 md:w-8 w-6 h-6 rounded-full my-auto">
               <Image
                 src={contr.flag}
-                height="20"
+                height="15"
                 width="20"
                 className="h-full w-full"
                 alt=""
               />
             </div>
-            <Typography bold={"bold"}  lineClamp={"one"}>
+            <Typography bold={"bold"} size={"sm"}  lineClamp={"one"}>
               {" "}
               {contr.country}
             </Typography>
@@ -154,7 +156,7 @@ relative flex cursor-pointer rounded-lg px-5 md:py-4 py-3 border-2 focus:outline
   return (
     <>
       <ModalContainer showModal={modalState} setCloseModal={closeModal}>
-        <div className="flex justify-between  my-auto items-center pb-4 w-full">
+        <div className="flex justify-between  my-auto items-center pb-2 w-full">
           {!IsCountryChangeClicked ? (
             <Button
               variant={"closeBtn"}
@@ -169,7 +171,7 @@ relative flex cursor-pointer rounded-lg px-5 md:py-4 py-3 border-2 focus:outline
             </Button>
           ) : null}
 
-          <Typography bold={"bold"} size={"xl"} lineClamp={"one"}>
+          <Typography bold={"bold"} size={"lg"} lineClamp={"one"}>
             {" "}
             Select Your Preference
           </Typography>

@@ -15,11 +15,9 @@ import { UserPreferenceBtn } from "./Button";
 const ProductFilters = ({
   productsLength,
   noOfProductsCurrently,
-  filterSet,
 }: {
   productsLength: any;
   noOfProductsCurrently: any;
-  filterSet: any;
 }) => {
   const filters = [
     { name: "popularity", text: "Most Popular" },
@@ -27,6 +25,7 @@ const ProductFilters = ({
     { name: "price-asc", text: "Price: Low to High" },
     { name: "price-desc", text: "Price: High to Low" },
   ];
+  const router = useRouter();
   const [selectedFilter, setFilter] = useState(filters[0]);
 
   const { pathname } = useRouter();
@@ -52,7 +51,16 @@ const ProductFilters = ({
               {filters.map((filter: any, indx: number) => (
                 <DropdownMenuItem
                   onClick={() => {
-                    filterSet("order_by", filters[indx].name);
+                    router.push(
+                      {
+                        query: {
+                          ...router.query,
+                          order_by: filters[indx].name,
+                        },
+                      },
+                      undefined,
+                      { shallow: true }
+                    );
                     setFilter(filter);
                   }}
                 >

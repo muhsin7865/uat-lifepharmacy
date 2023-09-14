@@ -11,10 +11,11 @@ import { buttonVariants } from "./ui/button";
 import { useEffect } from "react";
 
 import dynamic from "next/dynamic";
+import ShopByCatContent from "./shop-by-category";
 
-const ShopByCatContent = dynamic(() => import("./shop-by-category"), {
-  ssr: false,
-});
+// const ShopByCatContent = dynamic(() => import("./shop-by-category"), {
+//   ssr: false,
+// });
 const LgNavbarCategoriesSection = ({
   setOverlay,
   data,

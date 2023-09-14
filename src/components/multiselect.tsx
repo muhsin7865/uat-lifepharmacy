@@ -99,7 +99,7 @@ const Multiselect = ({ categoriesData }: { categoriesData: any }) => {
         <PopoverContent className=" p-1.5">
           <Command>
             <CommandInput placeholder="Search Categories..." className="h-9" />
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Nothing Found.</CommandEmpty>
             <CommandGroup className="m-1">
               {catData === null
                 ? categoriesData.map((category: any) => (

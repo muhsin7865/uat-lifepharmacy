@@ -26,7 +26,9 @@ const AddNewAddressForm = ({
   handleSubmit,
   register,
   errors,
-  currentLocation
+  currentLocation,
+  setLocationMapVisbility,
+  setaddnewAddressFormVisibility,
 }: {
   isModal: boolean;
   setCloseModal?: any;
@@ -34,20 +36,18 @@ const AddNewAddressForm = ({
   handleSubmit: any;
   register: any;
   errors: any;
-  currentLocation:any
+  currentLocation?: any;
+  setLocationMapVisbility?: any;
+  setaddnewAddressFormVisibility?: any;
 }) => {
   const { data: session, update } = useSession();
   const { countries, currentCountryDetails } = useLanguage();
 
   const {
-    setavailableAddresses,
     selectedCountryData,
     setCountriesDrawerState,
-    setaddnewAddressFormVisibility,
-    setAddNewAddressClick,
     formDataInitState,
     setAddressDataIndex,
-    setaddNewAddress,
     setFormData,
   } = useModal();
 
@@ -59,23 +59,14 @@ const AddNewAddressForm = ({
 
   const addressFormOnSubmit = (data: any): void => {
     debugger;
-  //  console.log({
-  //     ...data,
-  //     ...{
-  //       phone: "+" + selectedCountryData.callingCodes + getValues("phone"),
-  //       type:deliverToTypes, 
-  //       latitude:currentLocation[0], 
-  //       longitude:currentLocation[1],
-  //     },
-  //   });
-    
+
     saveAddresstoDb({
       ...data,
       ...{
         phone: "+" + selectedCountryData.callingCodes + getValues("phone"),
-        type:deliverToTypes, 
-        latitude:currentLocation[0], 
-        longitude:currentLocation[1],
+        type: deliverToTypes,
+        latitude: currentLocation[0],
+        longitude: currentLocation[1],
       },
     });
   };
@@ -94,14 +85,11 @@ const AddNewAddressForm = ({
       requestOptions
     )
       .then((response) => {
-        debugger
         if (response.ok) {
-          setAddressDataIndex(0);
-          setaddNewAddress(false);
-          setaddnewAddressFormVisibility(false);
+          // setAddressDataIndex(0);
+          setCloseModal();
           setFormData(formDataInitState);
           setTimeout(() => {
-            debugger;
             update();
           }, 2000);
         } else {
@@ -118,17 +106,14 @@ const AddNewAddressForm = ({
         <div className=" flex items-center space-x-3 rtl:space-x-reverse">
           {isModal && (
             <>
-              {/* <Button rounded={"full"} variant={"closeBtn"} size={"sm"}>
-                <Icon
-                  onClick={() => {
-                    setAddNewAddressClick(true);
-                    setavailableAddresses(true);
-
-                    setaddnewAddressFormVisibility(false);
-                  }}
-                  type="chevronLeftIcon"
-                />
-              </Button> */}
+              <button
+                onClick={() => {
+                  setaddnewAddressFormVisibility(false);
+                  setLocationMapVisbility(true);
+                }}
+              >
+                <Icon type="chevronLeftIcon" />
+              </button>
 
               <Typography size={"lg"} variant={"lifeText"} bold={"bold"}>
                 Your Address
@@ -142,7 +127,7 @@ const AddNewAddressForm = ({
             size={"sm"}
             rounded={"full"}
             onClick={() => {
-              setCloseModal(false);
+              setCloseModal();
             }}
           >
             <Icon type="crossIcon" />
@@ -280,10 +265,10 @@ const AddNewAddressForm = ({
 
           <Input
             rounded={"sm"}
-            {...register("street_address", { required: true })}
+            {...register("google_address", { required: true })}
             sizes={"sm"}
             className={`${
-              errors.street_address?.type === "required" ? "border-red-500" : ""
+              errors.google_address?.type === "required" ? "border-red-500" : ""
             }`}
             placeholder="Street Address *"
             required

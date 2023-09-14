@@ -5,12 +5,12 @@ import {
   AccordionItem,
 } from "./accordion-radix";
 
-import { BrandsButton, UserPreferenceBtn } from "./Button";
-import { useEffect, useState } from "react";
+import { UserPreferenceBtn } from "./Button";
+import { FC, useEffect, useState } from "react";
 import getCategoryData from "@/lib/getCategoryData";
 import { Icon } from "./ui/icons";
 import { Checkbox } from "./ui/checkbox";
-import { Typography } from "./ui/typography";
+import { Typography, typographyVariants } from "./ui/typography";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -20,17 +20,12 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { FilterIcon } from "lucide-react";
 import Image from "next/image";
 import { SideBarMenuTranstion } from "./ui/transition";
-const FiltersSection = ({
-  brandsData,
-  selectedBrands,
-  filterSet,
-  filterPath,
-}: {
+
+interface FilterProps {
   brandsData: any;
-  selectedBrands: any;
-  filterSet: any;
-  filterPath: string;
-}) => {
+}
+
+const FiltersSection: FC<FilterProps> = ({ brandsData }) => {
   const [catData, setCatData] = useState({
     data: [{}],
   });
@@ -42,9 +37,48 @@ const FiltersSection = ({
 
   const { currentCountryDetails } = useLanguage();
 
+  const router = useRouter();
+  const brandsQuery = router.query.brands?.toString();
+
+  console.log(router.query.brands?.toString());
+
+  const brandsArray = brandsQuery?.split(",") || [];
+
+  console.log(brandsArray.toString());
+
   const rangeSliderValueChange = (newValue: number[]) => {
     setRangeSliderValue([newValue[0], newValue[1]]);
   };
+
+  const removeBrand = (brandTobeRemoved: string) => {
+    router.push(
+      {
+        query: {
+          ...router.query,
+          brands: brandsArray
+            .filter((brand) => brand !== brandTobeRemoved)
+            .join(","),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const addBrand = (newBrand: string) => {
+    brandsArray.push(newBrand);
+    router.push(
+      {
+        query: {
+          ...router.query,
+          brands: brandsArray.join(","),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   function slugify(text: any) {
     if (text) {
       return text.toLowerCase().replace(/[\/\s&]+/g, "-");
@@ -52,12 +86,19 @@ const FiltersSection = ({
       return "";
     }
   }
-  const router = useRouter();
+
   function generatePath(slug: string) {
-    router.push(`/products?categories=${slug}`);
+    router.push({
+      query: {
+        categories: slug,
+      },
+    });
   }
 
-  const [rangeSliderValue, setRangeSliderValue] = useState([0, 9999]);
+  const [rangeSliderValue, setRangeSliderValue] = useState([
+    Number(router.query.min_price) || 0,
+    Number(router.query.max_price) || 9999,
+  ]);
   const [checkedCat, setCheckedCat] = useState<any>({
     item: null,
     checkedState: false,
@@ -65,6 +106,17 @@ const FiltersSection = ({
 
   const [instantCheckedState, setInstantChecked] = useState(false);
   const [sideBarState, setSideBarState] = useState(false);
+
+  useEffect(() => {
+    setCheckedCat({
+      item: router.query.categories
+        ? router.query.categories
+        : router.query.collections
+        ? router.query.collections
+        : "",
+      checkedState: true,
+    });
+  }, [router.query]);
 
   return (
     <>
@@ -111,22 +163,13 @@ const FiltersSection = ({
                               className="flex space-x-3 rtl:space-x-reverse"
                               onClick={() => {
                                 generatePath(slugify(item.name));
-
-                                setCheckedCat((prevState: any) =>
-                                  prevState && prevState.item === item.name
-                                    ? null
-                                    : {
-                                        item: item.name,
-                                        checkedState: true,
-                                      }
-                                );
                               }}
                             >
                               <Checkbox
                                 id="terms"
                                 checked={
                                   checkedCat
-                                    ? checkedCat.item === item.name
+                                    ? checkedCat.item === slugify(item.name)
                                       ? checkedCat.checkedState
                                       : false
                                     : false
@@ -166,31 +209,16 @@ const FiltersSection = ({
                                       className="flex space-x-3 rtl:space-x-reverse"
                                       onClick={() => {
                                         generatePath(child.slug);
-
-                                        setCheckedCat((prevState: any) =>
-                                          prevState &&
-                                          prevState.item === item.name
-                                            ? {
-                                                item: child.name,
-                                                checkedState: true,
-                                              }
-                                            : prevState &&
-                                              prevState.item === child.name
-                                            ? null
-                                            : {
-                                                item: child.name,
-                                                checkedState: true,
-                                              }
-                                        );
                                       }}
                                     >
                                       <Checkbox
                                         id="terms"
                                         checked={
                                           checkedCat
-                                            ? checkedCat.item === child.name
+                                            ? checkedCat.item ===
+                                              slugify(item.name)
                                               ? checkedCat.checkedState
-                                              : checkedCat.item === item.name
+                                              : checkedCat.item === child.slug
                                               ? checkedCat.checkedState
                                               : false
                                             : false
@@ -216,7 +244,7 @@ const FiltersSection = ({
                                           checkedCat && checkedCat.item != null
                                             ? checkedCat.item === item.name ||
                                               checkedCat.item.includes(
-                                                child.name
+                                                child.slug
                                               ) ||
                                               checkedCat.item.includes(
                                                 sec_data.name
@@ -232,13 +260,13 @@ const FiltersSection = ({
                                             checked={
                                               checkedCat
                                                 ? checkedCat.item ===
-                                                  sec_data.name
+                                                  slugify(sec_data.name)
                                                   ? checkedCat.checkedState
                                                   : checkedCat.item ===
-                                                    child.name
+                                                    child.slug
                                                   ? checkedCat.checkedState
                                                   : checkedCat.item ===
-                                                    item.name
+                                                    slugify(item.name)
                                                   ? checkedCat.checkedState
                                                   : false
                                                 : false
@@ -246,30 +274,6 @@ const FiltersSection = ({
                                             onClick={() => {
                                               generatePath(
                                                 slugify(sec_data.name)
-                                              );
-
-                                              setCheckedCat((prevState: any) =>
-                                                prevState &&
-                                                prevState.item === item.name
-                                                  ? {
-                                                      item: sec_data.name,
-                                                      checkedState: true,
-                                                    }
-                                                  : prevState &&
-                                                    prevState.item ===
-                                                      child.name
-                                                  ? {
-                                                      item: sec_data.name,
-                                                      checkedState: true,
-                                                    }
-                                                  : prevState &&
-                                                    prevState.item ===
-                                                      sec_data.name
-                                                  ? null
-                                                  : {
-                                                      item: sec_data.name,
-                                                      checkedState: true,
-                                                    }
                                               );
                                             }}
                                           />
@@ -313,11 +317,33 @@ const FiltersSection = ({
                       <div className="h-[10rem] overflow-y-auto ">
                         {brandsData.map((brand: any) =>
                           brand.featured === true ? (
-                            <BrandsButton
-                              selectedBrands={selectedBrands}
-                              brandName={brand.name}
-                              filterSet={filterSet}
-                            />
+                            <button
+                              onClick={() => {
+                                debugger;
+
+                                brandsArray.includes(slugify(brand.name))
+                                  ? removeBrand(slugify(brand.name))
+                                  : addBrand(slugify(brand.name));
+                              }}
+                              className="flex space-x-3 mb-3 rtl:space-x-reverse"
+                            >
+                              <Checkbox
+                                checked={brandsArray.includes(
+                                  slugify(brand.name)
+                                )}
+                              />
+                              <div
+                                className={cn(
+                                  typographyVariants({
+                                    size: "sm",
+                                    variant: "paragraph",
+                                  }),
+                                  "cursor-pointer"
+                                )}
+                              >
+                                {brand.name}
+                              </div>
+                            </button>
                           ) : null
                         )}
                       </div>
@@ -396,7 +422,19 @@ const FiltersSection = ({
                 </div>
                 <Button
                   onClick={() => {
-                    filterSet("min_price", rangeSliderValue[0].toFixed(2));
+                    router.push(
+                      {
+                        query: {
+                          ...router.query,
+                          min_price: rangeSliderValue[0].toFixed(2),
+                          max_price: rangeSliderValue[1].toFixed(2),
+                        },
+                      },
+                      undefined,
+                      { shallow: true }
+                    );
+
+                    // filterSet("min_price", rangeSliderValue[0].toFixed(2));
                   }}
                   rounded={"none"}
                   className="w-full !text-sm mt-3"
@@ -415,7 +453,7 @@ const FiltersSection = ({
         <button
           onClick={() => {
             setInstantChecked(!instantCheckedState);
-            filterSet("instant_only", 1);
+            // filterSet("instant_only", 1);
           }}
           className="flex space-x-2 rtl:space-x-reverse items-center"
         >

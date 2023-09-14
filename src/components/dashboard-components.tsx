@@ -14,11 +14,11 @@ import { AddNewAddressForm } from "./addnewAddressForm";
 import { useForm } from "react-hook-form";
 import deleteAddress from "@/lib/deleteAddress";
 import updateUserData from "@/lib/updateUserData";
-import { RadioContainer, RadioItem } from "./ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import getAppointmentsDetails from "@/lib/getAppointmentsData";
 import getPrecriptionList from "@/lib/getPrescriptionList";
 import getOrderDetails from "@/lib/getorderDetails";
+import { RadioGroup, RadioGroupItem } from "./ui/radio";
 
 const DashboardComp = ({ setActiveMenuItem }: { setActiveMenuItem: any }) => {
   const { data: session } = useSession();
@@ -868,7 +868,6 @@ const AccountDetailsComp = () => {
     session?.token.gender
   );
   console.log(session?.token);
-  
 
   const {
     handleSubmit: userDetailsSubmit,
@@ -973,20 +972,29 @@ const AccountDetailsComp = () => {
             Gender (optional)
           </Typography>
 
-          <RadioContainer className={"flex space-x-2 rtl:space-x-reverse"}>
+          <RadioGroup
+            defaultValue={genders[0]}
+            className={"flex space-x-2 rtl:space-x-reverse"}
+          >
             {genders.map((item) => (
-              <RadioItem
-                onClick={() => {
-                  debugger;
-                  setSelectedGender(item);
-                }}
-                checked={currentGender == item}
-                id={item}
-                value={item}
-                labelContent={item}
-              />
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  onClick={() => {
+                    debugger;
+                    setSelectedGender(item);
+                  }}
+                  id={item}
+                  value={item}
+                />
+                <label
+                  htmlFor={item}
+                  className={"capitalize "+typographyVariants({ size: "default" })}
+                >
+                  {item}
+                </label>
+              </div>
             ))}
-          </RadioContainer>
+          </RadioGroup>
         </div>
         <Button
           variant={"outline"}

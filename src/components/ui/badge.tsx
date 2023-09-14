@@ -63,11 +63,11 @@ const ProductWishList = ({
     (state: RootState) => state.cart.wishlist.data
   );
   const itemWishListState = () => {
-   return wishlistItems.find((item: any) => item.id === productId);
+    return wishlistItems.find((item: any) => item.id === productId);
   };
 
   useEffect(() => {
-    setWishListState(itemWishListState())
+    setWishListState(itemWishListState());
   }, [wishListAnimationstate]);
 
   const wishListOnCLick = () => {
@@ -151,9 +151,8 @@ const ProductBestSellerBadge = ({ proLabelData }: { proLabelData: any }) => {
 
 const SelectLangBadge = ({ selectLang }: { selectLang: string }) => {
   return (
-    <div className="bg-emerald-500  text-white xs:flex hidden rounded-full md:px-2 md:py-0.5 items-center space-x-2 rtl:space-x-reverse px-2 py-[2px]">
-      <Icon type="checkIcon" sizes={"sm"} />
-      <span className="sm:text-xs text-[10px]">{selectLang}</span>
+    <div className="bg-emerald-500  text-white xs:flex hidden rounded-full md:px-2  items-center space-x-2 rtl:space-x-reverse px-2  ">
+      <span className=" text-[10px] leading-4">{selectLang}</span>
     </div>
   );
 };

@@ -40,9 +40,44 @@ const BrandsSkeleton: React.FC<skeletonProps> = ({ noOfSuggestions }) => {
   );
 };
 
+const SingleDoctorSkelton: React.FC<skeletonProps> = ({ noOfSuggestions }) => {
+  return (
+    <>
+      {Array(noOfSuggestions).fill(
+        <div className="flex space-x-2 rtl:space-x-reverse">
+          <Skeleton className="h-56 p-7  rounded-sm w-1/3" />
+          <div className="w-full flex flex-col justify-between">
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="w-full p-5 rounded-sm " />
+              <Skeleton className="w-1/3 p-3 rounded-sm " />
+            </div>
+            <Skeleton className="w-1/3 p-6 rounded-sm " />
+            <Skeleton className="w-1/3 p-3 rounded-sm " />
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+const RadioGroupSkeleton: React.FC<skeletonProps> = ({ noOfSuggestions }) => {
+  return (
+    <>
+      {Array(noOfSuggestions).fill(
+        <div className="flex space-x-2 rtl:space-x-reverse items-center mb-2">
+          <Skeleton className=" p-4   w-3 h-3 rounded-full" />
+
+          <Skeleton className="w-3/4 p-3 rounded-md " />
+        </div>
+      )}
+    </>
+  );
+};
 
 export {
   SugesstionsSkeleton,
   ProductsSkeleton,
-  BrandsSkeleton
+  BrandsSkeleton,
+  SingleDoctorSkelton,
+  RadioGroupSkeleton,
 };

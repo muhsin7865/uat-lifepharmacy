@@ -8,93 +8,48 @@ import { Icon, Icons } from "./ui/icons";
 import {
   Typography,
   TypographyProps,
-  typographyVariants,
 } from "./ui/typography";
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import { useModal } from "./ui/modalcontext";
 import getFrequentlyBroughtTogetherData from "@/lib/frequentlyBroughtTogether";
-import { Checkbox } from "./ui/checkbox";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
-export const BrandsButton = ({
-  selectedBrands,
-  brandName,
-  filterSet,
-}: {
-  selectedBrands: any;
-  brandName: any;
-  filterSet: any;
-}) => {
-  const [isInverted, setIsInverted] = useState(false);
-  const brandsArray = selectedBrands
-    .filter((filter: any) => filter.type === "brands")
-    .map((filter: any) => filter.value);
+// export const BrandsButton = ({ brandName ,removeBrand, addBrand, brandsArray }: { brandName: any, brandsArray:any,  removeBrand:any, addBrand:any }) => {
+//   const [isInverted, setIsInverted] = useState(false);
 
-  const brandNameSlug = () => brandName.toLowerCase().replace(/[\s&]+/g, "-");
+//   function slugify(text: any) {
+//     if (text) {
+//       return text.toLowerCase().replace(/[\/\s&]+/g, "-");
+//     } else {
+//       return "";
+//     }
+//   }
 
-  const preSelectedBrands = () => {
-    brandsArray.push(brandNameSlug());
-    return brandsArray.toString();
-  };
 
-  const updatedBrands = () => {
-    debugger;
-    const updatedBrands = preSelectedBrands()
-      .split(",")
-      .filter(
-        (updated_brand_data: any) => updated_brand_data !== brandNameSlug()
-      );
-    console.log(updatedBrands.toString());
-
-    return updatedBrands.toString();
-  };
-
-  return (
-    <button
-      onClick={() => {
-        debugger;
-        setIsInverted((prevState) => !prevState);
-        isInverted
-          ? filterSet("brands", updatedBrands())
-          : filterSet("brands", preSelectedBrands());
-      }}
-      className="flex space-x-3 mb-3 rtl:space-x-reverse"
-    >
-      <Checkbox checked={isInverted} />
-      <div
-        className={cn(
-          typographyVariants({ size: "sm", variant: "paragraph" }),
-          "cursor-pointer"
-        )}
-      >
-        {brandName}
-      </div>
-    </button>
-  );
-};
-
-export const ShopNowButton = ({
-  classNames,
-  children,
-  onClick,
-}: {
-  children: any;
-  classNames: string;
-  onClick?: () => void;
-}) => {
-  return (
-    <button
-      className={
-        "btn-primary sm:text-base text-sm sm:py-3 py-2 sm:px-7 px-5 " +
-        classNames
-      }
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
+//   return (
+//     <button
+//       onClick={() => {
+//         debugger;
+//         setIsInverted((prevState) => !prevState);
+//         isInverted
+//           ? removeBrand(slugify(brandName))
+//           : addBrand(slugify(brandName));
+//       }}
+//       className="flex space-x-3 mb-3 rtl:space-x-reverse"
+//     >
+//       <Checkbox checked={isInverted} />
+//       <div
+//         className={cn(
+//           typographyVariants({ size: "sm", variant: "paragraph" }),
+//           "cursor-pointer"
+//         )}
+//       >
+//         {brandName}
+//       </div>
+//     </button>
+//   );
+// };
 
 export const DeliverInstructionsBtn = ({ instr }: { instr: any }) => {
   const [instrSelected, setInstrSelected] = useState(false);
@@ -162,7 +117,6 @@ export const AddOrEditCartBtn = ({
   };
   const getFrequentlyBroughtData = () => {
     getFrequentlyBroughtTogetherData(proId, locale).then((res) => {
-      debugger;
       res.data.products !== null
         ? setFrequentlyBroughtData([
             { proData: res.data.products },
@@ -172,10 +126,9 @@ export const AddOrEditCartBtn = ({
     });
   };
   useEffect(() => {
-    debugger;
     setProQty(getProductQuantity(proId));
   }, [cartItemsData]);
-  
+
   const [proQty, setProQty] = useState<any>(0);
 
   const addedToCart = () => {
@@ -235,7 +188,7 @@ export const AddOrEditCartBtn = ({
         className={`!px-1  ${
           isSingleProductPage
             ? "sm:h-[35px] sm:w-[35px] h-[30px] w-[30px]"
-            : "sm:h-[25px] sm:w-[25px] h-[25px] w-[25px]"
+            : "sm:h-[30px] sm:w-[30px] h-[25px] w-[25px]"
         }`}
       >
         <Icon type={proQty > 1 ? "minusIcon" : "trashIcon"} sizes={"sm"} />
@@ -251,7 +204,7 @@ export const AddOrEditCartBtn = ({
         className={`!px-1  ${
           isSingleProductPage
             ? "sm:h-[35px] sm:w-[35px] h-[30px] w-[30px]"
-            : "sm:h-[25px] sm:w-[25px] h-[25px] w-[25px]"
+            : "sm:h-[30px] sm:w-[30px] h-[25px] w-[25px]"
         }`}
       >
         <Icon
@@ -420,17 +373,17 @@ export const UserPreferenceBtn = () => {
 
   return (
     selectedUserPrefernece && (
-      <Tabs defaultValue="phone" className="border-none">
+      <Tabs defaultValue={selectedUserPrefernece.value} className="border-none">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger
-            value="phone"
+            value={userPreferences[0].value}
             className="z-20"
             onClick={() => changeUserPreference(userPreferences[0])}
           >
             <Icons type="gridIcon" sizes={"sm"} className="w-4 h-4" />
           </TabsTrigger>
           <TabsTrigger
-            value="email"
+            value={userPreferences[1].value}
             onClick={() => changeUserPreference(userPreferences[1])}
           >
             <Icons type="listicon" sizes={"sm"} className="w-4 h-4" />

@@ -72,6 +72,7 @@ type ModalContextState = {
     type: string
   ) => void;
   addnewAddressFormVisibility: boolean;
+  currentLocation:any, setCurrentLocation:any
 };
 
 const ModalContext = createContext<ModalContextState | undefined>(undefined);
@@ -95,7 +96,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
   const [addnewAddressFormVisibility, setaddnewAddressFormVisibility] =
     useState(false);
 
-  const [availableAddresses, setavailableAddresses] = useState(true);
+  const [availableAddresses, setavailableAddresses] = useState(false);
   const [isPhoneNumberValid, setPhoneNumberValidState] = useState(false);
   const [AddressDataIndex, setAddressDataIndex] = useState<any>(null);
   const [isFixedModal, setModalFixedState] = useState(false);
@@ -123,6 +124,9 @@ export const ModalProvider = ({ children }: { children: any }) => {
     useState(false);
   const [addNewAddressClick, setAddNewAddressClick] = useState(false);
 
+  const [currentLocation, setCurrentLocation] = useState<any>([
+    25.192622, 55.276383,
+  ]);
   const [searchData, setData] = useState({
     results: [
       {
@@ -222,9 +226,6 @@ export const ModalProvider = ({ children }: { children: any }) => {
     belongs_to: "user",
     deleted_at: null,
     is_validated: 1,
-
-
-    
   };
 
   const [formData, setFormData] = useState({
@@ -256,7 +257,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
           // debugger
 
           setAddressData(res.data.addresses);
-          setAddressDataIndex(res.data.addresses[0]);
+          setAddressDataIndex(session.selected_address || res.data.addresses[0]);
         })
       : setAddressDataIndex(null);
   }, [session?.token, !addnewAddressFormVisibility]);
@@ -278,7 +279,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
 
         if (addressData.length > 0) {
           setavailableAddresses(true);
-        } else if(addressData.length === 0) {
+        } else if (addressData.length === 0) {
           setAddNewAddressClick(true);
         }
       } else {
@@ -345,6 +346,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
     setAddNewAddressClick,
     locationOnClickHandle,
     addnewAddressFormVisibility,
+    currentLocation, setCurrentLocation
   };
 
   return (

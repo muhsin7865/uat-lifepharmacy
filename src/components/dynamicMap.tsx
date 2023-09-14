@@ -30,7 +30,7 @@ const Map = ({
   }, []);
 
   return (
-    <MapContainer className={"h-full w-full"} {...rest}>
+    <MapContainer className={"h-full w-full"}  {...rest}>
       {children(ReactLeaflet, Leaflet)}
     </MapContainer>
   );

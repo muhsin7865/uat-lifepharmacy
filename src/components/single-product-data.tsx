@@ -23,7 +23,14 @@ export const SingleProductData = ({
   isRowView: boolean;
 }) => {
   const [isValidImage, setIsValidImage] = useState(true);
-
+  const OfferType = (offer_type: string, offerValue: number) => {
+    switch (offer_type) {
+      case "flat_percentage_discount":
+        return `FLAT ${offerValue}% OFF`;
+      default:
+        return "";
+    }
+  };
   const handleImageError = () => {
     setIsValidImage(false);
   };
@@ -64,12 +71,15 @@ export const SingleProductData = ({
               productRating={pro_data.rating}
               isProductPage={false}
             />
-            <ProductWishList wishListSet={wishListSet} productId={pro_data.id}/>
+            <ProductWishList
+              wishListSet={wishListSet}
+              productId={pro_data.id}
+            />
           </figure>
 
           <div className=" px-2 py-1 rounded-lg rounded-t-none ">
             <ProductPricesData
-              productPriceSize={"lg"}
+              productPriceSize={"xl"}
               productPrices={pro_data.prices}
             />
 
@@ -153,10 +163,8 @@ export const SingleProductData = ({
                   : null}
               </div>
               {offervalue ? (
-                <div className="bg-amber-300 w-fit border border-orange-500 flex items-center px-2 py-0.5 rounded">
-                  <Typography variant={"lifeText"} size={"xs"}>
-                    FLAT {parseFloat(offervalue).toFixed(0)}% OFF
-                  </Typography>
+                <div className="bg-amber-200 w-fit text-xs py-1 px-2 h-fit   rounded">
+                  {OfferType(pro_data.offers.type, pro_data.offers.value)}
                 </div>
               ) : null}
 

@@ -6,24 +6,24 @@ import BreadCrumb from "./breadcrumb";
 import { useRouter } from "next/router";
 
 export const ProductsPage = ({
-  filterPath,
   isSearchPage,
   categoryData,
-  menuData,
-  selectedBrands,
   type,
   isBrandsPage,
 }: {
   categoryData: any;
-  menuData: any;
-  filterPath: string;
   isSearchPage: boolean;
-  selectedBrands: string;
   type: string;
   isBrandsPage: boolean;
 }) => {
   const [readMoreClick, setReadMoreClick] = useState(false);
-  const { query } = useRouter();
+  const router = useRouter();
+  
+  const { query } = router;
+  const { pathname } = router;
+  const productsSubQuery =
+    query.collections || query.categories || query.brands || "";
+  const menuData = [ String(pathname).replace('/', ''), productsSubQuery.toString()];
 
   return (
     <div className="max-w-[1450px] mx-auto  sm:px-[10px] px-[5px]">
@@ -51,7 +51,7 @@ export const ProductsPage = ({
               className="object-cover lg:h-[20rem] md:h-[15rem] w-full mx-auto "
             />
           )}
-          <BreadCrumb menuData={menuData} type={type} />
+          <BreadCrumb type={type} menuData={menuData}/>
 
           {isBrandsPage
             ? categoryData.brand_details.short_description && (
@@ -121,22 +121,13 @@ export const ProductsPage = ({
               </h1>
             </div>
           </div>
-          <BreadCrumb menuData={menuData} type={type} />
+          <BreadCrumb type={type} menuData={menuData}/>
         </>
       )}
       <ProductsPageData
-        filterPath={filterPath}
         categoryData={categoryData}
         brandsData={categoryData.brands}
         isSearchPage={isSearchPage}
-        selectedBrands={
-          menuData[0] != "Category"
-            ? selectedBrands
-            : query.brands
-            ? query.brands
-            : ""
-        }
-        menuData={menuData}
         isBrandsPage={isBrandsPage}
       />
     </div>

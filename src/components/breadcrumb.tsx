@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { typographyVariants } from "./ui/typography";
 import { buttonVariants } from "./ui/button";
 import { Icon } from "./ui/icons";
 
-const BreadCrumb = ({ menuData, type }: { menuData: any; type: string }) => {
+const BreadCrumb = ({ type, menuData }: {  type: string, menuData:string[] }) => {
+
+
+
   function generatedUrl(indx: number) {
     let generatedUrl = "/";
     menuData.slice(0, indx + 1).map((itemName: string) => {

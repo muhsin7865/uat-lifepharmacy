@@ -4,8 +4,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { VariantProps, cva } from "class-variance-authority";
 import { Fragment } from "react";
 import * as React from "react";
-import { BottomSheet } from "react-spring-bottom-sheet";
-import "react-spring-bottom-sheet/dist/style.css";
+// import { BottomSheet } from "react-spring-bottom-sheet";
+// import "react-spring-bottom-sheet/dist/style.css";
+import { Drawer } from "vaul";
 
 const modalVariants = cva(
   "transform overflow-hidden rounded-2xl sm:rounded-b-2xl rounded-b-none bg-white  text-left align-middle shadow-xl transition-all",
@@ -15,6 +16,7 @@ const modalVariants = cva(
         default: "sm:max-w-lg w-full p-4",
         sm: "sm:max-w-sm w-full p-3",
         lg: "sm:max-w-xl w-full sm:p-5 p-4",
+        xl: "sm:max-w-2xl w-full sm:p-5 p-4",
         full: "w-full",
       },
     },
@@ -99,15 +101,32 @@ const ModalContainer = React.forwardRef<HTMLDivElement, ModalProps>(
         </Dialog>
       </Transition>
     ) : (
-      <BottomSheet
-        snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 0.1]}
-        className="z-[100]"
-        open={showModal}
-        blocking={!sheetOnly}
-        onDismiss={() => setCloseModal(false)}
-      >
-        <div className="bg-white px-3 pb-3 z-[100]">{children}</div>
-      </BottomSheet>
+      <Drawer.Root open={showModal} onClose={() => setCloseModal(false)}>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 bg-black/40" />
+          <Drawer.Content className="bg-white flex flex-col p-3 rounded-t-[10px] mt-24 fixed bottom-0 left-0 right-0 z-[150]">
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-2" />
+            {children}
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+      //    <Drawer.Root
+      //    // snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 0.1]}
+      //    // className="z-[100]"
+      //    // open={showModal}
+
+      //    // blocking={!sheetOnly}
+      //    // onDismiss={() => setCloseModal(false)}
+      //    open={showModal}
+      //    onClose={() => setCloseModal(false)}
+      //  >
+      //    <Drawer.Portal className=" bg-white z-[1000]" >
+      //      <Drawer.Content>
+      //        <div className="bg-white px-3 pb-3 z-[100]">{children}</div>
+      //      </Drawer.Content>
+      //      <Drawer.Overlay className="fixed inset-0 bg-black/40" />
+      //    </Drawer.Portal>
+      //  </Drawer.Root>
     );
   }
 );
