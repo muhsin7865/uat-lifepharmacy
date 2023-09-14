@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export default NextAuth({
@@ -53,15 +53,18 @@ export default NextAuth({
       user,
       token,
       trigger,
+      session,
     }: {
       user: any;
       token: any;
       trigger?: "update" | "signIn" | "signUp" | undefined;
+      session?: Session;
     }) {
       // token.userRole = "regusr"
       // token = user
       if (trigger === "update") {
         token.token = token.token;
+        token.selected_address = session?.selected_address ;
       }
       if (user) {
         token = user.data.user;

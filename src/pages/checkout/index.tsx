@@ -4,7 +4,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/components/ui/modalcontext";
-import { RadioContainer, RadioItem } from "@/components/ui/skeleton";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio";
 import { Typography, typographyVariants } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
@@ -151,13 +151,13 @@ export default function Checkout({}) {
                 }`}
               >
                 <div className="flex space-x-4 rtl:space-x-reverse items-center">
-                  <RadioContainer  className={""}>
-                    <RadioItem
+                  <RadioGroup  className={""}>
+                    <RadioGroupItem
                       value=""
                       defaultChecked={indx === 0}
                       id={`delivery_slot-${indx}`}
                     />
-                  </RadioContainer>
+                  </RadioGroup>
 
                   <Image
                     src="https://www.lifepharmacy.com/images/standard-icon.svg"

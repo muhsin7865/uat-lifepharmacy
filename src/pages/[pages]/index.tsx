@@ -36,7 +36,6 @@ export const getStaticPaths = async (context: any) => {
       pages: slug,
     },
   }));
-console.log(paths);
 
   return {
     fallback: "blocking",

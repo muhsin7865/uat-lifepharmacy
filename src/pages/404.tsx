@@ -1,5 +1,3 @@
-import { ShopNowButton } from "@/components/Button";
-import { Icon } from "@/components/ui/icons";
 import { useRouter } from "next/router";
 export default function ErrorPage() {
   const router = useRouter();
@@ -13,13 +11,13 @@ export default function ErrorPage() {
         <p className="sm:text-base text-sm">
           We are sorry, the page you've requested is not available
         </p>
-        <ShopNowButton
+        {/* <ShopNowButton
           onClick={() => router.push("/")}
           classNames="flex space-x-3 rtl:space-x-reverse mx-auto items-center "
         >
           <div className="sm:text-sm text-xs">BACK TO HOME PAGE</div>
           <Icon sizes={"sm"} />
-        </ShopNowButton>
+        </ShopNowButton> */}
       </div>
     </div>
   );

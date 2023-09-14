@@ -466,3 +466,7 @@ section{
 .swiper {
     padding-bottom: 20px !important;
   }
+
+  .leaflet-control-attribution{
+    display: none;
+  }
