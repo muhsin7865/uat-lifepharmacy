@@ -5,7 +5,7 @@ import { Typography } from "./ui/typography";
 import { Input } from "./ui/input";
 import { cn } from "@/lib/utils";
 import { useModal } from "./ui/modalcontext";
-import { RadioContainer, RadioItem } from "./ui/skeleton";
+import { RadioGroup, RadioGroupItem } from "./ui/radio";
 // import { Player } from "@lottiefiles/react-lottie-player";
 
 const LocationModal = () => {
@@ -131,9 +131,9 @@ export const PaymentMethodModal = ({
           onClick={() => setNewCardSelectedState(!newCardSelected)}
           className="flex space-x-4  rtl:space-x-reverse py-2 w-full items-center"
         >
-          <RadioContainer className={""}>
-            <RadioItem checked={newCardSelected} value="" id="method-1" />
-          </RadioContainer>
+          <RadioGroup className={""}>
+            <RadioGroupItem checked={newCardSelected} value="" id="method-1" />
+          </RadioGroup>
           <img
             src="https://www.lifepharmacy.com/images/card.svg"
             height={30}
