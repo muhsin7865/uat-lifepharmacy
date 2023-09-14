@@ -1,7 +1,7 @@
 import BreadCrumb from "@/components/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icons";
-import { RadioContainer, RadioItem } from "@/components/ui/skeleton";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio";
 import { Typography } from "@/components/ui/typography";
 import getSingleOrderDetails from "@/lib/getSingleOrderDetails";
 import Image from "next/image";
@@ -320,11 +320,14 @@ export default function SingleOrderDetailsPage({
                 </Typography>
               </div>
               <div className="flex space-x-2 rtl:space-x-reverse items-start ">
-                <RadioContainer className={""}>
-                <RadioItem
-                value=""
-                  checked={true}
-                  labelContent={
+                <RadioGroup className={""}>
+                  <div className="flex space-x-2 items-center">
+                    <RadioGroupItem
+                      value=""
+                      checked={true}
+                      id="payment_type"
+                      className="mt-1.5 cursor-pointer"
+                    />
                     <div className="w-full space-y-3 cursor-pointer">
                       <Typography variant={"paragraph"} size={"sm"}>
                         Credit / Debit Card
@@ -349,12 +352,8 @@ export default function SingleOrderDetailsPage({
                         account.
                       </Typography>
                     </div>
-                  }
-                  id="payment_type"
-                  className="mt-1.5 cursor-pointer"
-                />
-                </RadioContainer>
-       
+                  </div>
+                </RadioGroup>
               </div>
             </div>
             <Button className="w-full">PAY TO CONFIRM</Button>
